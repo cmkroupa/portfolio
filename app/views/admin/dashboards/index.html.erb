@@ -1,0 +1,257 @@
+<div class="max-w-7xl mx-auto py-10 px-4">
+  <div class="flex justify-between items-end mb-12">
+    <div>
+      <h1 class="text-4xl font-bold mb-2">My Portfolio Dashboard</h1>
+      <p class="text-gray-500">Manage all your profile content from this one place.</p>
+    </div>
+    <div class="flex gap-4 items-center">
+      <%= link_to root_path, class: "glass-badge hover:bg-black hover:text-white" do %>
+        View Public Site
+      <% end %>
+      <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "glass-badge text-red-500 hover:bg-red-500 hover:text-white border-red-500/20" %>
+    </div>
+  </div>
+
+  <div class="space-y-12">
+    
+    <%# 1. Profile Section %>
+    <section class="glass-card p-8">
+      <h2 class="text-2xl font-bold mb-8 flex items-center gap-3">
+        <span class="text-3xl">👤</span> Profile & About
+      </h2>
+      <%= form_with model: [:admin, @profile], url: admin_profile_path, method: :patch, class: "space-y-8" do |f| %>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div class="space-y-6">
+            <div>
+              <%= f.label :name, class: "block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2" %>
+              <%= f.text_field :name, class: "w-full bg-white/40 border-white/20 rounded-xl p-4 focus:bg-white/60 transition-all font-medium" %>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <%= f.label :gpa, "GPA", class: "block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2" %>
+                <%= f.text_field :gpa, class: "w-full bg-white/40 border-white/20 rounded-xl p-4 focus:bg-white/60 transition-all font-medium text-center" %>
+              </div>
+              <div>
+                <%= f.label :year_started, "Started Year", class: "block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2" %>
+                <%= f.number_field :year_started, class: "w-full bg-white/40 border-white/20 rounded-xl p-4 focus:bg-white/60 transition-all font-medium text-center" %>
+              </div>
+            </div>
+            <div>
+              <%= f.label :story, "My Story", class: "block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2" %>
+              <%= f.text_area :story, rows: 8, class: "w-full bg-white/40 border-white/20 rounded-xl p-4 focus:bg-white/60 transition-all leading-relaxed" %>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400 mb-4">Favourites (Interests)</h3>
+            <div class="space-y-4">
+              <% (@profile.interests || []).each_with_index do |interest, index| %>
+                <div class="p-5 bg-white/30 rounded-2xl border border-white/20">
+                  <div class="flex gap-4 mb-4">
+                    <div class="w-16">
+                      <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Emoji</label>
+                      <input type="text" name="profile[interests_attributes][<%= index %>][emoji]" value="<%= interest['emoji'] %>" class="w-full bg-white/40 border-white/20 rounded-lg p-2 text-center text-xl">
+                    </div>
+                    <div class="flex-grow">
+                      <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Title</label>
+                      <input type="text" name="profile[interests_attributes][<%= index %>][title]" value="<%= interest['title'] %>" class="w-full bg-white/40 border-white/20 rounded-lg p-2 font-bold">
+                    </div>
+                  </div>
+                  <div class="space-y-3">
+                    <div>
+                      <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Description (Highlight — Summary)</label>
+                      <input type="text" name="profile[interests_attributes][<%= index %>][description]" value="<%= interest['description'] %>" class="w-full bg-white/40 border-white/20 rounded-lg p-2 text-sm">
+                    </div>
+                    <div>
+                      <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Notable Mention</label>
+                      <input type="text" name="profile[interests_attributes][<%= index %>][mention]" value="<%= interest['mention'] %>" class="w-full bg-white/40 border-white/20 rounded-lg p-2 text-sm">
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end pt-6 border-t border-white/10">
+          <%= f.submit "Save Profile Changes", class: "bg-black text-white px-10 py-4 rounded-2xl font-bold hover:scale-105 transition-all cursor-pointer shadow-lg" %>
+        </div>
+      <% end %>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      
+      <%# 2. Skills Section %>
+      <section class="space-y-6">
+        <h2 class="text-2xl font-bold flex items-center gap-3">
+          <span class="text-3xl">🛠️</span> Skills
+        </h2>
+        
+        <div class="glass-card p-6 border-accent/20 border-2">
+          <h3 class="text-sm font-bold uppercase tracking-widest text-accent mb-4">Add New Skill</h3>
+          <%= form_with model: [:admin, @new_skill], class: "flex gap-3" do |f| %>
+            <%= f.text_field :title, placeholder: "Title (e.g. React)", class: "flex-grow bg-white border-white/20 rounded-xl p-3 text-sm" %>
+            <%= f.text_field :tag, placeholder: "Category", class: "w-32 bg-white border-white/20 rounded-xl p-3 text-sm" %>
+            <%= f.submit "+", class: "bg-accent text-white font-bold px-6 rounded-xl hover:scale-105 transition-all cursor-pointer" %>
+          <% end %>
+        </div>
+
+        <div class="space-y-3">
+          <% @skills.group_by(&:tag).each do |tag, skills| %>
+            <div class="glass-card p-4">
+              <h4 class="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-3"><%= tag %></h4>
+              <div class="flex flex-wrap gap-2">
+                <% skills.each do |skill| %>
+                  <div class="flex items-center gap-2 bg-white/40 border border-white/20 py-1 pl-3 pr-1 rounded-full text-xs font-medium">
+                    <%= skill.title %>
+                    <%= button_to admin_skill_path(skill), method: :delete, class: "w-6 h-6 flex items-center justify-center rounded-full hover:bg-red-500 hover:text-white transition-all text-[10px]" do %>
+                      ✕
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </section>
+
+      <%# 3. Projects Section %>
+      <section class="space-y-6">
+        <h2 class="text-2xl font-bold flex items-center gap-3">
+          <span class="text-3xl">📂</span> Projects
+        </h2>
+        
+        <div class="glass-card p-6 border-accent/20 border-2">
+          <h3 class="text-sm font-bold uppercase tracking-widest text-accent mb-4">New Project</h3>
+          <%= form_with model: [:admin, @new_project], class: "space-y-3" do |f| %>
+            <%= f.text_field :title, placeholder: "Project Title", class: "w-full bg-white border-white/20 rounded-xl p-3 text-sm" %>
+            <%= f.text_area :description, placeholder: "Short description...", rows: 2, class: "w-full bg-white border-white/20 rounded-xl p-3 text-sm" %>
+            <div class="flex gap-3">
+              <%= f.text_field :url, placeholder: "URL", class: "flex-grow bg-white border-white/20 rounded-xl p-3 text-sm" %>
+              <%= f.submit "Create Project", class: "bg-accent text-white font-bold px-6 rounded-xl hover:scale-105 transition-all cursor-pointer" %>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4">
+          <% @projects.each do |project| %>
+            <div class="glass-card p-5 flex justify-between items-center group">
+              <div>
+                <h4 class="font-bold mb-1 text-sm"><%= project.title %></h4>
+                <p class="text-xs text-gray-500 truncate max-w-xs"><%= project.description %></p>
+              </div>
+              <div class="flex gap-2">
+                <%= button_to admin_project_path(project), method: :delete, class: "p-2 rounded-lg hover:bg-red-50 text-red-400 hover:text-red-600 transition-all" do %>
+                  <span class="text-lg">🗑️</span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      
+      <%# 4. Experience Section %>
+      <section class="space-y-6">
+        <h2 class="text-2xl font-bold flex items-center gap-3">
+          <span class="text-3xl">💼</span> Experience
+        </h2>
+        
+        <div class="glass-card p-6 border-accent/20 border-2">
+          <h3 class="text-sm font-bold uppercase tracking-widest text-accent mb-4">Add Work Experience</h3>
+          <%= form_with model: [:admin, @new_experience], class: "space-y-4" do |f| %>
+            <div class="grid grid-cols-2 gap-3">
+              <%= f.text_field :title, placeholder: "Role (e.g. SDE Intern)", class: "bg-white border-white/20 rounded-xl p-3 text-sm" %>
+              <%= f.text_field :organization, placeholder: "Company", class: "bg-white border-white/20 rounded-xl p-3 text-sm" %>
+            </div>
+            <%= f.text_area :description, placeholder: "Responsibilities...", rows: 3, class: "w-full bg-white border-white/20 rounded-xl p-3 text-sm" %>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1 ml-1">Start Date</label>
+                <%= f.date_field :start, class: "w-full bg-white border-white/20 rounded-xl p-3 text-sm" %>
+              </div>
+              <div>
+                <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1 ml-1">End Date</label>
+                <%= f.date_field :end, class: "w-full bg-white border-white/20 rounded-xl p-3 text-sm" %>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <%= f.text_field :location, placeholder: "Location", class: "flex-grow bg-white border-white/20 rounded-xl p-3 text-sm" %>
+              <%= f.submit "+", class: "bg-accent text-white font-bold px-8 rounded-xl hover:scale-105 transition-all cursor-pointer text-xl" %>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="space-y-4">
+          <% @experiences.each do |exp| %>
+            <div class="glass-card p-5 relative group">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h4 class="font-bold text-sm"><%= exp.title %></h4>
+                  <p class="text-[10px] text-accent font-bold uppercase tracking-wider"><%= exp.organization %></p>
+                </div>
+                <%= button_to admin_experience_path(exp), method: :delete, class: "text-gray-300 hover:text-red-500 transition-colors" do %>
+                  ✕
+                <% end %>
+              </div>
+              <p class="text-xs text-gray-500 line-clamp-2"><%= exp.description %></p>
+              <div class="mt-2 text-[10px] opacity-40 font-bold italic">
+                <%= exp.start&.strftime("%b %Y") %> - <%= exp.end&.strftime("%b %Y") || "Present" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </section>
+
+      <%# 5. Education Section %>
+      <section class="space-y-6">
+        <h2 class="text-2xl font-bold flex items-center gap-3">
+          <span class="text-3xl">🎓</span> Education
+        </h2>
+        
+        <div class="glass-card p-6 border-accent/20 border-2">
+          <h3 class="text-sm font-bold uppercase tracking-widest text-accent mb-4">Add Degree</h3>
+          <%= form_with model: [:admin, @new_degree], class: "space-y-4" do |f| %>
+            <%= f.text_field :title, placeholder: "Degree Name", class: "w-full bg-white border-white/20 rounded-xl p-3 text-sm" %>
+            <%= f.text_area :description, placeholder: "University / Summary...", rows: 2, class: "w-full bg-white border-white/20 rounded-xl p-3 text-sm" %>
+            <div class="flex gap-3">
+              <div class="flex-grow">
+                <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1 ml-1">Graduation Date</label>
+                <%= f.date_field :graduation, class: "w-full bg-white border-white/20 rounded-xl p-3 text-sm" %>
+              </div>
+              <div class="flex items-end">
+                <%= f.submit "+", class: "bg-accent text-white font-bold px-8 h-11 rounded-xl hover:scale-105 transition-all cursor-pointer text-xl" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="space-y-4">
+          <% @degrees.each do |degree| %>
+            <div class="glass-card p-5">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h4 class="font-bold text-sm"><%= degree.title %></h4>
+                  <p class="text-xs text-gray-500 mt-1"><%= degree.description %></p>
+                </div>
+                <div class="flex gap-2">
+                   <%= link_to admin_degree_path(degree), class: "p-2 rounded-lg hover:bg-white/40 text-[10px] font-bold" do %>
+                    COURSES
+                  <% end %>
+                  <%= button_to admin_degree_path(degree), method: :delete, class: "text-gray-300 hover:text-red-500" do %>
+                    ✕
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+</div>

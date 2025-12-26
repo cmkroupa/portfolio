@@ -1,0 +1,141 @@
+<main class="max-w-6xl mx-auto py-24 space-y-32">
+
+  <%# Header/Hero Simulation - if not present, just keeping the spacing %>
+  <header class="py-20 text-center">
+    <h1 class="text-7xl font-bold tracking-tight mb-8">
+      Cameron <span class="text-accent underline decoration-accent/20 underline-offset-8">Kroupa</span>
+    </h1>
+    <p class="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+      Software Engineer & Designer specialized in building modern, high-performance web applications.
+    </p>
+  </header>
+
+  <%# About Section %>
+  <section id="about" class="scroll-mt-32">
+    <div class="text-center mb-16">
+      <h2 class="text-5xl font-bold mb-4">About Me</h2>
+      <div class="h-1.5 w-20 bg-accent mx-auto rounded-full mb-8"></div>
+      <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+        Get to know more about me!
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
+      <!-- My Story -->
+      <div class="flex flex-col">
+        <h3 class="text-2xl font-semibold mb-6">My Story</h3>
+        <div class="glass-card p-8 flex-grow">
+          <p class="text-gray-600 mb-6 text-lg leading-relaxed">
+            <%= @profile&.story %>
+          </p>
+        </div>
+      </div>
+
+      <!-- Favourites -->
+      <div class="flex flex-col">
+        <h3 class="text-2xl font-semibold mb-6">Favourites</h3>
+        <div class="space-y-6 flex-grow flex flex-col">
+          <% (@profile&.interests || []).each do |interest| %>
+            <div class="glass-card p-6 flex-grow">
+              <div class="flex items-start">
+                <div>
+                  <h4 class="text-xl font-semibold mb-2 flex items-center">
+                    <span class="mr-3 text-2xl"><%= interest["emoji"] %></span> <%= interest["title"] %>
+                  </h4>
+                  <p class="text-gray-600">
+                    <strong><%= interest["description"].split(" — ").first %></strong> — <%= interest["description"].split(" — ").last %> 
+                    <% if interest["mention"].present? %>
+                      <span class="text-xs opacity-60 ml-1">(Notable mention: <%= interest["mention"] %>)</span>
+                    <% end %>
+                  </p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="mt-16 grid grid-cols-2 md:grid-cols-3 gap-6">
+      <div class="glass-card p-6 text-center">
+        <div class="text-3xl font-bold text-accent mb-2">
+          <%= (Date.current.year - (@profile&.year_started || 2023)) + (Date.current.month >= 9 ? 1 : 0) %>
+        </div>
+        <div class="text-gray-600">University Year</div>
+      </div>
+      <div class="glass-card p-6 text-center">
+        <div class="text-3xl font-bold text-accent mb-2"><%= @profile&.gpa %></div>
+        <div class="text-gray-600">GPA</div>
+      </div>
+      <div class="glass-card p-6 text-center">
+        <div class="text-3xl font-bold text-accent mb-2"><%= @projects.size %></div>
+        <div class="text-gray-600">Practical Projects</div>
+      </div>
+    </div>
+  </section>
+
+  <%# Skills Section %>
+  <section id="skills" class="scroll-mt-32">
+    <div class="text-center mb-16">
+      <h2 class="text-5xl font-bold mb-4">Skills</h2>
+      <div class="h-1.5 w-20 bg-accent mx-auto rounded-full"></div>
+    </div>
+    
+    <div class="space-y-12">
+      <% @skills.group_by(&:tag).each do |tag, skills| %>
+        <div>
+          <h3 class="text-xs font-bold text-accent uppercase tracking-[0.2em] mb-6 text-center"><%= tag || "Other" %></h3>
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+            <%= render skills %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <%# Experience Section %>
+  <section id="experience" class="scroll-mt-32">
+     <div class="text-center mb-20">
+      <h2 class="text-5xl font-bold mb-4">Experience</h2>
+      <div class="h-1.5 w-20 bg-accent mx-auto rounded-full"></div>
+    </div>
+    <div class="max-w-4xl mx-auto">
+      <%= render @experiences %>
+    </div>
+  </section>
+
+  <%# Projects Section %>
+  <section id="projects" class="scroll-mt-32">
+    <div class="text-center mb-20">
+      <h2 class="text-5xl font-bold mb-4">Projects</h2>
+      <div class="h-1.5 w-20 bg-accent mx-auto rounded-full"></div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <%= render @projects %>
+    </div>
+  </section>
+
+  <%# Education Section %>
+  <section id="education" class="scroll-mt-32 pb-20">
+    <div class="text-center mb-20">
+      <h2 class="text-5xl font-bold mb-4">Education</h2>
+      <div class="h-1.5 w-20 bg-accent mx-auto rounded-full"></div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <%= render @degrees %>
+    </div>
+  </section>
+
+  <%# Contact Section %>
+  <section id="contact" class="scroll-mt-32 pb-32">
+    <div class="text-center mb-16">
+      <h2 class="text-5xl font-bold mb-4">Contact</h2>
+      <div class="h-1.5 w-20 bg-accent mx-auto rounded-full mb-8"></div>
+    </div>
+    <div class="glass-card p-12 text-center max-w-2xl mx-auto">
+      <p class="text-gray-500 italic">Contact information coming soon...</p>
+    </div>
+  </section>
+
+</main>

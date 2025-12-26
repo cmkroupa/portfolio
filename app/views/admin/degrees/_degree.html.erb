@@ -1,0 +1,31 @@
+<div id="<%= dom_id degree %>" class="glass-card p-8 group">
+  <div class="flex justify-between items-start mb-6">
+    <div>
+      <h3 class="text-2xl font-bold mb-2"><%= degree.title %></h3>
+      <p class="text-accent font-semibold italic">Education</p>
+    </div>
+    <span class="glass-badge">
+      <%= degree.graduation.strftime("%B %Y") if degree.graduation %>
+    </span>
+  </div>
+  
+  <p class="text-gray-600 leading-relaxed mb-6">
+    <%= degree.description %>
+  </p>
+  
+  <% if degree.courses.any? %>
+    <div class="mt-8 border-t border-white/10 pt-6">
+      <h4 class="text-[10px] font-bold text-accent uppercase tracking-[0.2em] mb-4">Notable Coursework</h4>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <% degree.courses.each do |course| %>
+          <div class="group/course p-3 bg-white/20 rounded-xl border border-white/10 hover:bg-white/40 hover:border-white/30 transition-all">
+            <p class="font-bold text-xs group-hover/course:text-accent transition-colors"><%= course.title %></p>
+            <% if course.description.present? %>
+              <p class="text-[10px] text-gray-500 mt-1 leading-snug"><%= course.description %></p>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

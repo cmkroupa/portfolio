@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: oklch(0.21 0.034 264.665);
+  --color-accent: oklch(0.627 0.265 303.9);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply text-primary antialiased;
+    background: fixed;
+    background-image:
+      radial-gradient(at 0% 0%, oklch(0.9 0.05 264) 0%, transparent 50%),
+      radial-gradient(at 100% 0%, oklch(0.9 0.05 303) 0%, transparent 50%),
+      radial-gradient(at 0% 100%, oklch(0.9 0.05 303) 0%, transparent 50%),
+      radial-gradient(at 100% 100%, oklch(0.9 0.05 264) 0%, transparent 50%),
+      oklch(0.98 0.01 264);
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/30 backdrop-blur-xl border border-white/20 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl;
+  }
+
+  .glass-badge {
+    @apply bg-white/50 backdrop-blur-md border border-white/30 px-4 py-1.5 rounded-full text-sm font-medium shadow-sm transition-all hover:bg-white/70;
+  }
+
+  .timeline-marker {
+    @apply relative pl-8 border-l-2 border-accent/30;
+  }
+
+  .timeline-dot {
+    @apply absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-accent border-4 border-white shadow-sm;
+  }
+}

@@ -1,0 +1,10 @@
+<h1>Editing course</h1>
+
+<%= render "form", degree: @degree, course: @course %>
+
+<br>
+
+<div>
+  <%= link_to "Show this course", [:admin, @degree, @course] %> |
+  <%= link_to "Back to degree", [:admin, @degree] %>
+</div>

@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  story: MyText
+  gpa: MyString
+  year_started: 1
+  interests: MyText
+
+two:
+  name: MyString
+  story: MyText
+  gpa: MyString
+  year_started: 1
+  interests: MyText

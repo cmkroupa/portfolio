@@ -1,0 +1,21 @@
+<div id="<%= dom_id project %>" class="glass-card group overflow-hidden">
+  <% if project.respond_to?(:image) && project.image.attached? %>
+    <%= image_tag project.image, class: "w-full aspect-video object-cover" %>
+  <% else %>
+    <div class="w-full aspect-video bg-accent/5 flex items-center justify-center">
+      <span class="text-accent/20 font-bold text-4xl"><%= project.title[0] %></span>
+    </div>
+  <% end %>
+  
+  <div class="p-8">
+    <div class="flex justify-between items-start mb-4">
+      <h3 class="text-2xl font-bold group-hover:text-accent transition-colors"><%= project.title %></h3>
+      <% if project.url.present? %>
+        <%= link_to project.url, target: "_blank", class: "p-2 glass-badge" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+        <% end %>
+      <% end %>
+    </div>
+    <p class="text-gray-600 leading-relaxed"><%= project.description %></p>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<% content_for :title, "New degree" %>
+
+<h1>New degree</h1>
+
+<%= render "form", degree: @degree %>
+
+<br>
+
+<div>
+  <%= link_to "Back to degrees", admin_degrees_path %>
+</div>

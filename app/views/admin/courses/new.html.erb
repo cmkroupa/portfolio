@@ -1,0 +1,9 @@
+<h1>New course for <%= @degree.title %></h1>
+
+<%= render "form", degree: @degree, course: @course %>
+
+<br>
+
+<div>
+  <%= link_to "Back to degree", [:admin, @degree] %>
+</div>
