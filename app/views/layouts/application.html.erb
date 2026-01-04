@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" >
+  <head>
+    <title><%= content_for(:title) || "Website" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Website">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+<body class="bg-gray-50">
+  <nav class="fixed top-0 inset-x-0 bg-white/90 backdrop-blur-md border-b border-gray-200 z-50 h-16 flex items-center">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <div class="font-bold text-gray-900">Portfolio</div>
+
+      <div class="hidden md:flex items-center gap-6">
+        <% ["Landing", "About", "Favourites", "Education", "Projects", "Experience"].each do |item| %>
+          <a href="#<%= item.downcase %>" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">
+            <%= item %>
+          </a>
+        <% end %>
+      </div>
+
+      <div class="flex items-center gap-2 px-3 py-1 bg-red-50 rounded-full border border-red-100 shadow-sm">
+        <%= turbo_stream_from "viewers_stream", channel: ViewerChannel %>
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute h-full w-full rounded-full bg-red-400 opacity-75"></span>
+          <span class="relative h-2 w-2 rounded-full bg-red-500"></span>
+        </span>
+        <span class="text-[10px] md:text-xs font-bold text-red-700 tabular-nums">
+          LIVE: <span id="viewer_count_display"><%= Stat.current_count %></span>
+        </span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container mx-auto mt-20 px-5 flex flex-col">
+    <%= yield %>
+  </main>
+
+  <div class="fixed bottom-6 right-6 flex flex-col items-end gap-3 md:hidden z-[100]">
+    <input type="checkbox" id="fab-toggle" class="peer hidden" />
+
+    <div class="hidden peer-checked:flex flex-col mb-2 gap-2 origin-bottom-right scale-95 peer-checked:scale-100 transition-all">
+      <% ["Landing", "About", "Favourites", "Education", "Projects", "Experience"].each do |item| %>
+        <a href="#<%= item.downcase %>" 
+           onclick="document.getElementById('fab-toggle').checked = false"
+           class="bg-white px-5 py-3 rounded-xl shadow-xl border border-gray-200 text-sm font-bold text-gray-700 active:bg-blue-50 whitespace-nowrap">
+          <%= item %>
+        </a>
+      <% end %>
+    </div>
+
+    <label for="fab-toggle" class="w-14 h-14 bg-blue-600 rounded-full shadow-2xl flex items-center justify-center text-white cursor-pointer active:scale-90 transition-transform">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+      </svg>
+    </label>
+  </div>
+</body>

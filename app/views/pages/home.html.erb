@@ -1,0 +1,98 @@
+<% content_for :title, "CK Portfolio" %>
+
+<section id="landing" class="relative min-h-screen flex flex-col justify-center items-center overflow-hidden">
+  <div class="absolute -top-24 -left-24 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl animate-pulse"></div>
+  
+  <div class="relative text-center space-y-6 z-10">
+    <h1 class="text-6xl md:text-8xl font-black text-slate-900 tracking-tight">
+      Cameron <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Kroupa</span>
+    </h1>
+    <p class="text-lg text-slate-600 max-w-xl mx-auto leading-relaxed">
+      <%= @about_text %>
+    </p>
+  </div>
+</section>
+
+<div class="space-y-32 pb-32">
+  
+  <section id="favourites" class="scroll-mt-24 px-4">
+  <div class="container mx-auto">
+    <h2 class="text-center text-sm font-bold uppercase tracking-[0.2em] text-slate-400 mb-12">Tools of Choice</h2>
+    
+    <div class="flex flex-wrap justify-center gap-4">
+      <% @devs.each do |dev| %>
+        <div class="group flex items-center gap-3 px-4 py-2 bg-white/40 backdrop-blur-md border border-white/40 rounded-2xl hover:bg-white hover:scale-105 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300">
+          
+          <div class="w-15 h-15 flex items-center justify-center transition-transform group-hover:rotate-12">
+            <div class="[&>svg]:w-full [&>svg]:h-full text-slate-600 group-hover:text-blue-600">
+              <%= dev.url.html_safe %>
+            </div>
+          </div>
+
+          <div class="flex flex-col">
+            <span class="font-bold text-slate-700 text-sm leading-tight"><%= dev.title %></span>
+            <span class="text-[12px] text-slate-400 font-mono uppercase tracking-tighter"><%= dev.tag %></span>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+  <section id="projects" class="scroll-mt-24 container mx-auto px-4">
+    <div class="flex items-end justify-between mb-12">
+      <div>
+        <h2 class="text-4xl font-bold text-slate-900">Featured Projects</h2>
+        <div class="h-1.5 w-20 bg-blue-600 mt-2 rounded-full"></div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <% @projects.each do |project| %>
+        <div class="group relative p-8 bg-white/60 backdrop-blur-sm border border-white/20 rounded-3xl hover:bg-white transition-all duration-500 overflow-hidden shadow-sm hover:shadow-2xl">
+          <div class="absolute -right-8 -top-8 w-32 h-32 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
+          <div class="relative z-10">
+            <h3 class="text-2xl font-bold text-slate-800 mb-3"><%= project.title %></h3>
+            <p class="text-slate-600 leading-relaxed mb-6"><%= project.description %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <section id="experience" class="scroll-mt-24 container mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+      <div>
+        <h2 class="text-3xl font-bold mb-10 flex items-center gap-3">
+          <span class="p-2 bg-blue-100 rounded-lg"><svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path d="M7 2a2 2 0 00-2 2v1h10V4a2 2 0 00-2-2H7zM5 5V4a1 1 0 011-1h8a1 1 0 011 1v1H5zM3 7a2 2 0 012-2h10a2 2 0 012 2v11a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg></span>
+          Work Experience
+        </h2>
+        <div class="space-y-8">
+          <% @experiences.each do |exp| %>
+            <div class="relative pl-8 border-l-2 border-slate-200 hover:border-blue-500 transition-colors py-1">
+              <div class="absolute -left-[9px] top-2 w-4 h-4 rounded-full bg-white border-2 border-slate-300"></div>
+              <h4 class="font-bold text-lg text-slate-800"><%= exp.title %></h4>
+              <p class="text-blue-600 text-sm font-semibold mb-2"><%= exp.organization %></p>
+              <p class="text-slate-500 text-sm"><%= exp.description %></p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div id="education" class="scroll-mt-24">
+        <h2 class="text-3xl font-bold mb-10 flex items-center gap-3">
+          <span class="p-2 bg-purple-100 rounded-lg"><svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20"><path d="M10.394 2.827a1 1 0 00-.788 0l-7 3a1 1 0 000 1.846l7 3a1 1 0 00.788 0l7-3a1 1 0 000-1.846l-7-3zM6.733 12.606l-3.467-1.486a1 1 0 00-1.333.916V14a1 1 0 00.667.94l6 2.5a1 1 0 00.666 0l6-2.5a1 1 0 00.667-.94v-1.964a1 1 0 00-1.333-.916l-3.467 1.486a3 3 0 01-2.666 0z"/></svg></span>
+          Education
+        </h2>
+        <div class="grid gap-4">
+          <% @courses.each do |course| %>
+            <div class="p-6 bg-white border border-slate-100 rounded-2xl shadow-sm">
+              <span class="text-xs font-black text-purple-500 uppercase tracking-widest"><%= course.degree %></span>
+              <h4 class="font-bold text-slate-800"><%= course.title %></h4>
+              <p class="text-slate-500 text-sm mt-1"><%= course.description %></p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
